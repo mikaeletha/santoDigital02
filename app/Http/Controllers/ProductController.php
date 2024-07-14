@@ -13,9 +13,35 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    // public function index(Request $request)
+    // {
+    //     $products = Product::paginate(10);
+    //     return response()->json($products);
+    // }
     public function index(Request $request)
     {
-        $products = Product::paginate(10);
+        $products = Product::with(['subcategory.category'])
+            ->orderBy('ProductName')
+            ->paginate(10);
+
+        $products->transform(function ($product) {
+            return [
+                'ProductKey' => $product->ProductKey,
+                'CategoryName' => $product->subcategory->category->CategoryName ?? null,
+                'SubcategoryName' => $product->subcategory->SubcategoryName ?? null,
+                'ProductSubcategoryKey' => $product->ProductSubcategoryKey,
+                'ProductSKU' => $product->ProductSKU,
+                'ProductName' => $product->ProductName,
+                'ModelName' => $product->ModelName,
+                'ProductDescription' => $product->ProductDescription,
+                'ProductColor' => $product->ProductColor,
+                'ProductSize' => $product->ProductSize,
+                'ProductStyle' => $product->ProductStyle,
+                'ProductCost' => $product->ProductCost,
+                'ProductPrice' => $product->ProductPrice,
+            ];
+        });
+
         return response()->json($products);
     }
 

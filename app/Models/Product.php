@@ -9,7 +9,7 @@ class Product extends Model
 {
     use HasFactory;
 
-    protected $table = 'Product';
+    protected $table = 'adventureworks_products';
     public $timestamps = false;
 
     protected $fillable = [
@@ -25,4 +25,9 @@ class Product extends Model
         'ProductCost',
         'ProductPrice',
     ];
+
+    public function subcategory()
+    {
+        return $this->belongsTo(ProductSubcategory::class, 'ProductSubcategoryKey', 'ProductSubcategoryKey');
+    }
 }
